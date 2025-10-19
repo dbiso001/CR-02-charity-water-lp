@@ -1,47 +1,284 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charity Water Landing Page</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Proof. Purpose. Water. | charity: water</title>
+  <meta name="description" content="Every dollar you give funds clean-water projects — see exactly where your impact flows." />
+
+  <!-- Font close to Avenir / Proxima Nova -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      /* charity: water palette */
+      --yellow:#FFC907; --blue:#2E9DF7; --light-blue:#8BD1CB;
+      --green:#4FCB53; --orange:#FF902A; --red:#F5402C;
+      --dark-green:#159A48; --pink:#F16061;
+
+      /* switch to var(--yellow) if you want a yellow site background */
+      --bg: var(--blue);
+
+      --panel:#ffffff; --text:#0b0e14; --text-on-bg:#ffffff; --muted:#4b5563;
+      --shadow:0 10px 30px rgba(0,0,0,.18); --radius:22px; --max:1160px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+      color:var(--text); line-height:1.6;
+      background:
+        radial-gradient(1000px 500px at 10% -20%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(1000px 500px at 90% 110%, rgba(0,0,0,.08), transparent 60%),
+        var(--bg);
+    }
+    a{color:#111;text-decoration:none} a:hover{text-decoration:underline}
+
+    .wrap{max-width:var(--max);margin-inline:auto;padding:20px}
+    .section{padding:28px 20px}
+    section{scroll-margin-top:84px}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;font-weight:700;border:2px solid #111;
+         transition:transform .15s ease, box-shadow .15s ease, background-color .15s ease;color:#111;background:#fff}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.18)}
+    .btn.invert{background:#111;color:#fff;border-color:#111}
+
+    /* Header */
+    header{position:sticky;top:0;background:rgba(255,255,255,.88);backdrop-filter:saturate(140%) blur(8px);
+           border-bottom:1px solid rgba(0,0,0,.08);z-index:10}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:#111}
+    .brand img{height:32px;width:auto;display:block}
+    .brand span#brandtext{display:none}
+    .menu{display:flex;gap:12px;flex-wrap:wrap}
+
+    /* Hero layout */
+    .hero .frame{display:grid;gap:22px;align-items:stretch}
+    @media(min-width:960px){.hero .frame{grid-template-columns:1.15fr .85fr}}
+    .hero-card{background:var(--panel);border:1px solid rgba(0,0,0,.06);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+    .kicker{color:var(--yellow);font-weight:800;letter-spacing:.3px;text-transform:uppercase;font-size:.82rem}
+    h1{font-size:clamp(1.8rem, 2vw + 1.2rem, 3.3rem);line-height:1.12;margin:10px 0 8px}
+    .lead{color:var(--muted);font-size:clamp(1rem, .4vw + 1rem, 1.12rem)}
+
+    /* ===== IMAGE CARD — photo covers 100% of card (no text overlay) ===== */
+    .hero-media{
+      position:relative;
+      background:#000;
+      border-radius:var(--radius);
+      border:1px solid rgba(0,0,0,.08);
+      overflow:hidden;
+      min-height:320px;
+      display:block;
+    }
+    .hero-media .photo{
+      position:absolute;
+      inset:0;
+      background-size:cover;      /* fill the entire card */
+      background-position:center;
+      background-repeat:no-repeat;
+      /* graceful water-like fallback if all URLs fail */
+      background-image:
+        radial-gradient(50% 40% at 50% 30%, rgba(255,255,255,.25), transparent 60%),
+        linear-gradient(180deg, #bfe9ff 0%, #88c7ff 40%, #2E9DF7 100%);
+    }
+
+    /* Other content cards */
+    .two-col{display:grid;gap:18px}
+    @media(min-width:900px){.two-col{grid-template-columns:1fr 1fr}}
+    .card{background:var(--panel);border:1px solid rgba(0,0,0,.06);border-radius:18px;padding:20px;box-shadow:var(--shadow)}
+
+    .features{display:grid;gap:18px}
+    @media(min-width:800px){.features{grid-template-columns:repeat(3,1fr)}}
+    .feature{background:var(--panel);border:1px solid rgba(0,0,0,.06);border-radius:18px;padding:18px;transition:transform .15s ease, box-shadow .15s ease}
+    .feature:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(0,0,0,.18)}
+    .badge{display:inline-block;font-size:.75rem;padding:4px 8px;border-radius:999px;background:var(--yellow);color:#111;font-weight:800}
+
+    .cta{display:flex;flex-direction:column;gap:14px;align-items:start}
+    @media(min-width:820px){.cta{flex-direction:row;align-items:center;justify-content:space-between}}
+
+    /* Preview modal */
+    dialog.preview{width:min(920px,92vw);border:none;border-radius:18px;padding:0;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.45)}
+    dialog.preview::backdrop{background:rgba(0,0,0,.5)}
+    .preview-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#111;color:#fff}
+    .preview-body{padding:0;background:#000}
+    .preview-body img{display:block;width:100%;height:auto}
+    .icon-btn{background:transparent;border:none;color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
+  </style>
 </head>
 <body>
-    <!-- Hero Section: This is the main banner at the top of the page -->
-    <section class="hero">
-        <!-- Main headline -->
-        <h1>Clean Water for Everyone</h1>
-        <!-- Subheadline -->
-        <p>Join us in bringing safe, clean water to communities in need.</p>
-    </section>
+  <header>
+    <div class="wrap nav">
+      <div class="brand">
+        <img src="img/cw_logo.png" alt="charity: water logo"
+             onerror="this.style.display='none';document.getElementById('brandtext').style.display='inline'">
+        <span id="brandtext">charity: water</span>
+      </div>
+      <nav class="menu" aria-label="Primary">
+        <a href="#overview">Overview</a>
+        <a href="#story">Story</a>
+        <a href="#impact">Impact</a>
+        <a href="#resources">Resources</a>
+        <a class="btn invert" href="#cta">Track your change</a>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Story Section: This tells the story of the nonprofit -->
-    <section class="story">
-        <h2>Our Story</h2>
-        <p>
-         
-    </section>
-
-    <!-- Real-World Impact Story Section -->
-    <section class="impact-story">
-        <!-- Section headline -->
-        <h2>Real Impact: Meet Amina</h2>
-        <!-- Container for image and text -->
-        <div class="impact-content">
-            <!-- Impact image -->
-            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80" alt="Amina smiling with clean water" class="impact-image">
-            <!-- Impact story text -->
-            <p>
-                Amina used to walk miles every day to collect water for her family. Thanks to your support, her village now has a clean water well. Amina can go to school and her family is healthier and happier.
-            </p>
+  <main id="main">
+    <!-- ===== HERO ===== -->
+    <section class="hero section wrap" id="overview">
+      <div class="frame">
+        <div class="hero-card">
+          <p class="kicker">Proof. Purpose. Water.</p>
+          <h1>Every dollar you give funds clean-water projects — see exactly where your impact flows.</h1>
+          <p class="lead">Built for college students who want their contribution to be tangible, transparent, and world-changing.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
+            <a class="btn invert" href="#cta">Track your change</a>
+            <button class="btn" type="button" id="openPreview">Preview image</button>
+            <a class="btn" href="#resources">See the research</a>
+          </div>
         </div>
+
+        <!-- ✅ CUP OF WATER (background image with multi-fallback; covers 100%) -->
+        <aside class="hero-media" aria-label="Hero image: clear glass cup filled with fresh drinking water">
+          <div class="photo" id="cupPhoto" role="img" aria-label="Cup of water"></div>
+          <!-- No caption text shown -->
+        </aside>
+      </div>
     </section>
 
-    <!-- Call-to-Action Section: This encourages visitors to take action -->
-    <section class="call-to-action">
-        <h2>Make a Difference</h2>
-        <p>Your support can help save lives. Every donation brings us closer to a world with clean water for all.</p>
-        <a href="#" class="donate-button">Donate Now</a>
+    <!-- ===== STORY ===== -->
+    <section class="section wrap two-col" id="story">
+      <article class="card">
+        <h2>Why water — and why now</h2>
+        <p>663 million people live without clean water. For students, that number is more than a statistic — it’s a chance to act. Clean water radically improves health, education, and economic opportunity.</p>
+        <p>Your donation funds community-led projects. You’ll receive updates and can trace exactly where your impact flows. That’s transparency — and it’s the heart of this campaign.</p>
+      </article>
+      <aside class="card">
+        <h3>What your gift unlocks</h3>
+        <ul>
+          <li>Health: fewer water-borne illnesses and clinic visits</li>
+          <li>Education: students spend more time in class, not collecting water</li>
+          <li>Opportunity: communities build, grow, and thrive</li>
+        </ul>
+      </aside>
     </section>
+
+    <!-- ===== KEY POINTS ===== -->
+    <section class="section wrap" id="impact">
+      <h2>Key Points</h2>
+      <div class="features">
+        <article class="feature">
+          <span class="badge">Transparency</span>
+          <h3>Track every dollar</h3>
+          <p>See the project your donation supports and follow progress updates — no guesswork, just proof.</p>
+        </article>
+        <article class="feature">
+          <span class="badge">Community</span>
+          <h3>Students leading change</h3>
+          <p>Small, consistent gifts from students add up to sustainable, life-changing infrastructure.</p>
+        </article>
+        <article class="feature">
+          <span class="badge">Impact</span>
+          <h3>Water changes everything</h3>
+          <p>From health to education to opportunity — clean water is a multiplier for good.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== RESOURCES ===== -->
+    <section class="section wrap" id="resources">
+      <h2>Resources & Citations</h2>
+      <ul>
+        <li><a href="https://www.charitywater.org/" target="_blank" rel="noopener">charity: water — mission & model</a></li>
+        <li><a href="https://unstats.un.org/sdgs/report/2016/goal-06/" target="_blank" rel="noopener">UN SDG 6: Clean Water & Sanitation</a></li>
+        <li><a href="#" aria-disabled="true">Campus initiatives case study</a></li>
+      </ul>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="section wrap" id="cta">
+      <div class="card cta">
+        <div>
+          <h2>Ready to track your change?</h2>
+        <p class="lead">Take one meaningful step today. Your contribution funds a specific clean-water project — and you’ll see exactly where it goes.</p>
+        </div>
+        <a class="btn invert" href="#overview">Donate or get involved</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <small>© <span id="y"></span> Your Name • Built with HTML & CSS • <a style="color:#fff" href="#">Live Site</a></small>
+    </div>
+  </footer>
+
+  <!-- Image Preview Modal -->
+  <dialog class="preview" id="previewDialog" aria-label="Image preview dialog">
+    <div class="preview-head">
+      <strong>Image preview</strong>
+      <button class="icon-btn" id="closePreview" aria-label="Close preview">✕</button>
+    </div>
+    <div class="preview-body">
+      <img id="previewImg" alt="Large preview of the hero water image">
+    </div>
+  </dialog>
+
+  <script>
+    // Footer year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // ---- Robust image loader with 3 fallbacks ----
+    const photo = document.getElementById('cupPhoto');
+    const sources = [
+      // 1) local file (put your image here)
+      'img/cup-of-water.jpg',
+      // 2) Unsplash cup of water (HTTPS)
+      'https://images.unsplash.com/photo-1542736667-069246bdbc69?q=80&w=1600&auto=format&fit=crop',
+      // 3) Pexels cup of water (HTTPS)
+      'https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?w=1600&auto=compress&cs=tinysrgb'
+    ];
+
+    function tryLoad(i=0){
+      if(i >= sources.length){ return; } // keep gradient fallback
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => { photo.style.backgroundImage = `url('${sources[i]}')`; };
+      img.onerror = () => tryLoad(i+1);
+      img.src = sources[i];
+    }
+    tryLoad();
+
+    // ---- Preview modal uses the same background image ----
+    const dlg = document.getElementById('previewDialog');
+    const openBtn = document.getElementById('openPreview');
+    const closeBtn = document.getElementById('closePreview');
+    const previewImg = document.getElementById('previewImg');
+
+    openBtn?.addEventListener('click', () => {
+      const bg = photo.style.backgroundImage;
+      if(bg && bg.startsWith('url(')){
+        const url = bg.slice(4, -1).replaceAll('"','').replaceAll("'", "");
+        previewImg.src = url;
+      } else {
+        // simple gradient placeholder
+        previewImg.src =
+          'data:image/svg+xml;utf8,' +
+          encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675"><defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#bfe9ff"/><stop offset="100%" stop-color="#2E9DF7"/></linearGradient></defs><rect width="1200" height="675" fill="url(#g)"/></svg>`);
+      }
+      dlg.showModal();
+    });
+    closeBtn?.addEventListener('click', () => dlg.close());
+    dlg?.addEventListener('click', (e) => {
+      const rect = dlg.getBoundingClientRect();
+      const inside = e.clientX >= rect.left && e.clientX <= rect.right &&
+                     e.clientY >= rect.top && e.clientY <= rect.bottom;
+      if(!inside) dlg.close();
+    });
+    window.addEventListener('keydown', (e) => { if(e.key === 'Escape' && dlg.open) dlg.close(); });
+  </script>
 </body>
 </html>
